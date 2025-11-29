@@ -15,14 +15,18 @@ import androidx.compose.ui.unit.dp
 import com.example.tasktenacity.data.TaskState
 import com.example.tasktenacity.ui.components.TaskCard
 
+// Screen showing tasks due today
 @Composable
 fun TodayScreen(taskState: TaskState) {
+    // Refresh tasks when the screen is first displayed
     LaunchedEffect(Unit) { taskState.refreshData() }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        // Screen title
         Text(
             "Today's Focus",
             style = MaterialTheme.typography.headlineLarge,
@@ -30,8 +34,12 @@ fun TodayScreen(taskState: TaskState) {
             modifier = Modifier.padding(start = 24.dp, top = 40.dp, bottom = 16.dp)
         )
 
+        // Show placeholder if there are no tasks for today
         if (taskState.todayTasks.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Filled.Mood, contentDescription = null, modifier = Modifier.size(48.dp))
                     Spacer(Modifier.height(16.dp))
@@ -39,11 +47,12 @@ fun TodayScreen(taskState: TaskState) {
                 }
             }
         } else {
+            // Display today's tasks in a scrollable list
             LazyColumn(contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp)) {
                 items(taskState.todayTasks) { task ->
                     TaskCard(
                         task = task,
-                        onToggle = { taskState.toggleTaskCompletion(it) }
+                        onToggle = { taskState.toggleTaskCompletion(it) } // Toggle completion on click
                     )
                 }
             }

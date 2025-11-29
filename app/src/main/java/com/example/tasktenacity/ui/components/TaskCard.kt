@@ -21,10 +21,11 @@ import com.example.tasktenacity.data.TaskEntity
 
 @Composable
 fun TaskCard(
-    task: TaskEntity,
-    onToggle: (TaskEntity) -> Unit,
-    onDeleteRequest: ((TaskEntity) -> Unit)? = null
+    task: TaskEntity, // The task data to display
+    onToggle: (TaskEntity) -> Unit, // Callback when task completion status is toggled
+    onDeleteRequest: ((TaskEntity) -> Unit)? = null // Optional callback for deleting the task
 ) {
+    // Animate the background color depending on whether the task is completed
     val backgroundColor by animateColorAsState(
         targetValue = if (task.isCompleted)
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
@@ -32,32 +33,41 @@ fun TaskCard(
         label = "TaskCardBackgroundColor"
     )
 
+    // Animate the transparency of the card for completed tasks
     val taskAlpha by animateFloatAsState(
         targetValue = if (task.isCompleted) 0.6f else 1f,
         label = "TaskCardAlpha"
     )
 
+    // Set text color based on task completion
     val textColor =
         if (task.isCompleted) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         else MaterialTheme.colorScheme.onSurface
 
+    // The main card container
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp)
-            .alpha(taskAlpha),
+            .alpha(taskAlpha), // Apply alpha animation
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // Column containing task title and additional info
             Column(
-                modifier = Modifier.weight(1f).clickable { onToggle(task) }
+                modifier = Modifier
+                    .weight(1f) // Take remaining horizontal space
+                    .clickable { onToggle(task) } // Toggle completion when clicked
             ) {
+                // Task title
                 Text(
                     text = task.title,
                     style = MaterialTheme.typography.titleLarge,
@@ -65,7 +75,10 @@ fun TaskCard(
                     color = textColor
                 )
                 Spacer(Modifier.height(6.dp))
+
+                // Row for category tag and deadline
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Task category displayed in a colored surface
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(6.dp)
@@ -78,6 +91,8 @@ fun TaskCard(
                         )
                     }
                     Spacer(Modifier.width(12.dp))
+
+                    // Task deadline
                     Text(
                         text = if (task.deadline.isNotBlank()) "Due: ${task.deadline}" else "No Deadline",
                         style = MaterialTheme.typography.bodySmall,
@@ -86,7 +101,12 @@ fun TaskCard(
                 }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 8.dp)) {
+            // Row for action buttons: delete and toggle completion
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
+                // Optional delete button
                 if (onDeleteRequest != null) {
                     IconButton(onClick = { onDeleteRequest(task) }) {
                         Icon(
@@ -97,6 +117,7 @@ fun TaskCard(
                     }
                 }
 
+                // Completion toggle button
                 IconButton(onClick = { onToggle(task) }) {
                     Icon(
                         imageVector = if (task.isCompleted)

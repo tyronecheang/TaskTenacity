@@ -18,12 +18,14 @@ import java.util.*
 
 @Composable
 fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("School") }
-    var deadline by remember { mutableStateOf("") }
-    val categories = listOf("School", "Work", "Personal", "Health")
-    var showDatePicker by remember { mutableStateOf(false) }
+    // State variables for the input fields
+    var title by remember { mutableStateOf("") } // Task title
+    var category by remember { mutableStateOf("School") } // Selected category
+    var deadline by remember { mutableStateOf("") } // Task deadline
+    val categories = listOf("School", "Work", "Personal", "Health") // Available categories
+    var showDatePicker by remember { mutableStateOf(false) } // Controls date picker visibility
 
+    // Logic to allow only future or today's dates to be selected
     val selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             val todayUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
@@ -45,22 +47,25 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
         }
     }
 
-
+    // Date picker state initialization with today as default
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Calendar.getInstance().timeInMillis,
         selectableDates = selectableDates
     )
 
+    // Initialize deadline to today's date on first composition
     LaunchedEffect(Unit) {
         val today = Calendar.getInstance()
         deadline = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(today.time)
     }
 
+    // Display the DatePickerDialog if showDatePicker is true
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 Button(onClick = {
+                    // Set deadline to the selected date in yyyy-MM-dd format
                     datePickerState.selectedDateMillis?.let { millis ->
                         deadline = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
                             timeZone = TimeZone.getTimeZone("UTC")
@@ -81,11 +86,14 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
         }
     }
 
+    // Main layout column
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
+        // Screen header
         Text(
             "New Task",
             style = MaterialTheme.typography.headlineLarge,
@@ -95,6 +103,7 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
 
         Spacer(Modifier.height(24.dp))
 
+        // Title input field
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
@@ -105,9 +114,11 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
 
         Spacer(Modifier.height(24.dp))
 
+        // Category selection label
         Text("Category", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(8.dp))
 
+        // Row of filter chips for selecting category
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -123,6 +134,7 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
 
         Spacer(Modifier.height(24.dp))
 
+        // Deadline field (read-only) with calendar icon to show date picker
         OutlinedTextField(
             value = deadline,
             onValueChange = {},
@@ -140,8 +152,10 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
 
         Spacer(Modifier.height(32.dp))
 
+        // Save task button
         Button(
             onClick = {
+                // Only add task if title is not empty
                 if (title.isNotBlank()) {
                     taskState.addTask(
                         TaskEntity(
@@ -150,10 +164,12 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
                             deadline = deadline
                         )
                     )
-                    onSave()
+                    onSave() // Call callback after saving
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(56.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
         ) {
             Icon(Icons.Filled.Add, null)
             Spacer(Modifier.width(8.dp))
