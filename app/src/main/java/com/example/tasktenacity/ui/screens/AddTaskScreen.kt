@@ -25,24 +25,26 @@ fun AddTaskScreen(taskState: TaskState, onSave: () -> Unit) {
     var showDatePicker by remember { mutableStateOf(false) }
 
     val selectableDates = object : SelectableDates {
-        override fun isSelectableDate(utcMillis: Long): Boolean {
-            val todayCal = Calendar.getInstance()
-            todayCal.set(Calendar.HOUR_OF_DAY, 0)
-            todayCal.set(Calendar.MINUTE, 0)
-            todayCal.set(Calendar.SECOND, 0)
-            todayCal.set(Calendar.MILLISECOND, 0)
-            val todayStartMillis = todayCal.timeInMillis
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            val todayUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
 
-            val dateCal = Calendar.getInstance()
-            dateCal.timeInMillis = utcMillis
-            dateCal.set(Calendar.HOUR_OF_DAY, 0)
-            dateCal.set(Calendar.MINUTE, 0)
-            dateCal.set(Calendar.SECOND, 0)
-            dateCal.set(Calendar.MILLISECOND, 0)
+            val selectedUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                timeInMillis = utcTimeMillis
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
 
-            return dateCal.timeInMillis >= todayStartMillis
+            return !selectedUtc.before(todayUtc)
         }
     }
+
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Calendar.getInstance().timeInMillis,
