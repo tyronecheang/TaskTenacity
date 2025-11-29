@@ -64,10 +64,10 @@ All data is stored locally for instant access, with a smooth Jetpack Compose UI 
 
 ## 🛠️ Requirements
 
--Android Studio Flamingo or later
--Kotlin 2.0+
--Android device or emulator with SDK 21+
--Gradle 8+
+- Android Studio Flamingo or later
+- Kotlin 2.0+
+- Android device or emulator with SDK 21+
+- Gradle 8+
 
 ---
 
