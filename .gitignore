@@ -7,7 +7,7 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.kotlin/errors/
+.kotlin/errors
 .DS_Store
 /build
 /captures
