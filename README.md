@@ -1,4 +1,4 @@
-# Task Tenacity
+# TaskTenacity
 
 ## ⏱️ Smarter Task Management for Busy Lives
 
