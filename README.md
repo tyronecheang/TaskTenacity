@@ -22,10 +22,6 @@ Many people struggle to:
 - Organize tasks by category  
 - Maintain daily focus  
 
-**Theme — Productivity:**  
-Task Tenacity was built to solve this problem by making **task management simple, intuitive, and visually organized**.  
-Users can create tasks, set deadlines, categorize, and quickly check their daily workload — all in one app.
-
 ---
 
 ## 🧠 Overview
